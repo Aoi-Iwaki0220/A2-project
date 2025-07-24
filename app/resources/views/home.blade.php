@@ -15,6 +15,20 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                    <h3>もくひょう</h3>
+
+                    @if (count($goals) > 0)
+                        <ul>
+                            @foreach ($goals as $goal)
+                                <p>
+                                    {{ $goal['date'] }}までに
+                                     <br>{{ $goal['amount'] }} 円ためる！
+                                </p>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p>目標がまだ登録されていません。</p>
+                    @endif
                 </div>
             </div>
         </div>
