@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DisplayController;
+use App\Http\Controllers\RegistrationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,4 +23,6 @@ use App\Http\Controllers\DisplayController;
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/', [DisplayController::class, 'index']);
+Route::get('/create_goal',  [RegistrationController::class, 'createGoalForm'])->name('create.goal');
+Route::post('/create_goal',  [RegistrationController::class, 'createGoal']);
 

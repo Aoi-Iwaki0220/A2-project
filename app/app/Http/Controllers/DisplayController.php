@@ -9,7 +9,7 @@ class DisplayController extends Controller
 {
     public function index() {
         $goal = new Goal;
-        $all = Goal::withTrashed()->get()->toArray();
+        $all = Goal::latest()->first();
 
         return view('home', [
             'goals' => $all

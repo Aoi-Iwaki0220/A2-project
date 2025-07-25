@@ -11,5 +11,6 @@ class Goal extends Model
     use HasFactory;
     use SoftDeletes;
 
-     protected $table = 'goals';
+    protected $table = 'goals';
+    protected $fillable = ['date', 'amount'];
 }

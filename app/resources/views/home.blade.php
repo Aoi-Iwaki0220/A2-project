@@ -17,15 +17,16 @@
                     {{ __('You are logged in!') }}
                     <h3>もくひょう</h3>
 
-                    @if (count($goals) > 0)
+                    @if ($goals)
                         <ul>
-                            @foreach ($goals as $goal)
                                 <p>
-                                    {{ $goal['date'] }}までに
-                                     <br>{{ $goal['amount'] }} 円ためる！
+                                    {{ \Carbon\Carbon::parse($goals['date'])->format('Yねん nがつ j にち') }}までに
+                                     <br>{{ $goals['amount'] }} 円ためる！
                                 </p>
-                            @endforeach
                         </ul>
+                        <a href="{{ route('create.goal') }}">
+                        <button type="button" class="btn btn-primary">もくひょうをきめる</button>
+                    </a>
                     @else
                         <p>目標がまだ登録されていません。</p>
                     @endif
