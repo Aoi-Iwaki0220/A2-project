@@ -25,4 +25,6 @@ use App\Http\Controllers\RegistrationController;
 Route::get('/', [DisplayController::class, 'index']);
 Route::get('/create_goal',  [RegistrationController::class, 'createGoalForm'])->name('create.goal');
 Route::post('/create_goal',  [RegistrationController::class, 'createGoal']);
+Route::get('/edit_goal/{id}',  [RegistrationController::class, 'editGoalForm'])->name('edit.goal');
+Route::post('/edit_goal/{id}',  [RegistrationController::class, 'editGoal']);
 
