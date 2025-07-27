@@ -31,13 +31,22 @@ class RegistrationController extends Controller
         ]);
     }
 
-    public function editGoal(int $id, Request $request) {
+    public function editGoal(int $id, Request $request) {  //目標編集
         $G_record = Goal::find($id);
 
         $G_record->date = $request->date;
         $G_record->amount = $request->amount;
 
         $G_record->save();
+        return redirect('/');
+    }
+
+    public function deleteGoal(int $id, Request $request) {  //目標論理削除
+        $goal =  Goal::find($id);
+
+        if($goal) {
+            $goal->delete();
+        }
         return redirect('/');
     }
 }

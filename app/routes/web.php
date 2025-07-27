@@ -27,4 +27,5 @@ Route::get('/create_goal',  [RegistrationController::class, 'createGoalForm'])->
 Route::post('/create_goal',  [RegistrationController::class, 'createGoal']);
 Route::get('/edit_goal/{id}',  [RegistrationController::class, 'editGoalForm'])->name('edit.goal');
 Route::post('/edit_goal/{id}',  [RegistrationController::class, 'editGoal']);
+Route::delete('/delete_goal/{id}',  [RegistrationController::class, 'deleteGoal'])->name('delete.goal');
 

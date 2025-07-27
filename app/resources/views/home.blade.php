@@ -20,7 +20,7 @@
                     @if  (!empty($goals))
                         <ul>
                                 <p>
-                                    {{ \Carbon\Carbon::parse($goals['date'])->format('Yねん nがつ j にち') }}までに
+                                    {{ \Carbon\Carbon::parse($goals['date'])->format('Y年 n月 j 日') }}までに
                                      <br>{{ $goals['amount'] }} 円ためる！
                                 </p>
                         </ul>
@@ -28,7 +28,7 @@
                             <button type="button" class="btn btn-primary">へんしゅうする</button>
                         </a>
                     @else
-                        <p>目標がまだ登録されていません</p>
+                        <p>もくひょうは まだ きめていないよ</p>
                         <a href="{{ route('create.goal') }}">
                             <button type="button" class="btn btn-primary">きめる</button>
                         </a>
