@@ -28,4 +28,13 @@ Route::post('/create_goal',  [RegistrationController::class, 'createGoal']);
 Route::get('/edit_goal/{id}',  [RegistrationController::class, 'editGoalForm'])->name('edit.goal');
 Route::post('/edit_goal/{id}',  [RegistrationController::class, 'editGoal']);
 Route::delete('/delete_goal/{id}',  [RegistrationController::class, 'deleteGoal'])->name('delete.goal');
+Route::get('/create_spend',  [RegistrationController::class, 'createSpendForm'])->name('create.spend');
+Route::post('/create_spend',  [RegistrationController::class, 'createSpend']);
+Route::get('/create_income',  [RegistrationController::class, 'createIncomeForm'])->name('create.income');
+Route::post('/create_income',  [RegistrationController::class, 'createIncome']);
 
+
+
+Route::get('/child_mypage', function () {
+    return view('child_mypage');
+})->name('child.mypage');

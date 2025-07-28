@@ -1,3 +1,4 @@
+
 <main>
     <div>もくひょうをきめよう</div>
     <form action="{{ route('create.goal')}}" method="post">

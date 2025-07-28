@@ -25,12 +25,12 @@
                                 </p>
                         </ul>
                         <a href="{{ route('edit.goal', ['id' => $goals['id']]) }}">
-                            <button type="button" class="btn btn-primary">へんしゅうする</button>
+                            <button type="button">へんしゅうする</button>
                         </a>
                     @else
                         <p>もくひょうは まだ きめていないよ</p>
                         <a href="{{ route('create.goal') }}">
-                            <button type="button" class="btn btn-primary">きめる</button>
+                            <button type="button" >きめる</button>
                         </a>
                     @endif
 
