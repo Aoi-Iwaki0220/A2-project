@@ -13,9 +13,31 @@
     </div>
 </div>
     <div>
-        <a href="">
-            <button type="button">しょうたいコードをつくる</button>
-        </a>
+        <div>
+            <button type="button" onclick="invitationCode()">しょうたいコードをつくる</button>
+            <span id="invite-code" style="margin-left: 10px; background-color: #ccc; "></span>
+        </div>
+
+        <script>
+            function invitationCode() {
+                fetch("{{ route('create.invitation') }}", {
+                    method: "GET",
+                    headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": '{{ csrf_token() }}'
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('invite-code').innerText = data.invite_code;
+                    })
+                    .catch(error => {
+                    console.error("エラー:", error);
+                    alert("招待コードの生成に失敗しました。");
+                    });
+            }
+        </script>
+
         <a href="">
             <button type="button">へんしゅうする</button>
         </a>

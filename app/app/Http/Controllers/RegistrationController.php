@@ -87,7 +87,7 @@ class RegistrationController extends Controller
             
     }
     
-    public function createIncome(Request $request) {  //支出追加
+    public function createIncome(Request $request) {  //収入追加
         $income = new Income;
 
         $income->date = $request->date;

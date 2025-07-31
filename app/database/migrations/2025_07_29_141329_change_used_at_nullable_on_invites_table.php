@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invites', function (Blueprint $table) {
-            $table->id();
-            $table->string('invite_code');
-            $table->datetime('used_at')->nullable();
-            $table->tinyInteger('used_flag')->default(0);
-            $table->timestamps();
+        Schema::table('invites', function (Blueprint $table) {
+
+            $table->datetime('used_at')->nullable()->change();
+
         });
     }
 

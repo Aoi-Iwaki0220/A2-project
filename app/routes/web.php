@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\InvitationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,9 +33,14 @@ Route::get('/create_spend',  [RegistrationController::class, 'createSpendForm'])
 Route::post('/create_spend',  [RegistrationController::class, 'createSpend']);
 Route::get('/create_income',  [RegistrationController::class, 'createIncomeForm'])->name('create.income');
 Route::post('/create_income',  [RegistrationController::class, 'createIncome']);
-
-
+Route::get('/invitation',  [InvitationController::class, 'invitationForm'])->name('invitation');
+Route::post('/invitation',  [InvitationController::class, 'invitation']);
+Route::get('/create_invitation',  [InvitationController::class, 'createInvitation'])->name('create.invitation');
 
 Route::get('/child_mypage', function () {
     return view('child_mypage');
 })->name('child.mypage');
+
+Route::get('/parent_mypage', function () {
+    return view('parent_mypage');
+})->name('parent.mypage');
