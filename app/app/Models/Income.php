@@ -10,4 +10,8 @@ class Income extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    public function type() {
+        return $this->belongsTo('App\Models\Type', 'type_id', 'id');    
+    }
 }

@@ -73,7 +73,45 @@ class RegistrationController extends Controller
         $spending->comment = $request->comment;
         $spending->save();
 
-        return redirect('/');
+        return redirect('child_mypage');
+    }
+
+    public function deleteSpend(int $id, Request $request) {  //支出論理削除
+        $spending =  Spending::find($id);
+
+        if($spending) {
+            $spending->delete();
+        }
+        return redirect('calendar');
+    }
+
+    public function editSpendForm(int $id, Request $request) {
+        $spending = new Spending;
+        $type = 1;
+
+        $spend_result = $spending->find($id);
+        $types = Type::where('category_type', $type)->get();
+
+        return view('detail_edit', [
+            'id' => $id,
+            'spend_result' => $spend_result,
+            'types' => $types,
+        ]);
+    }
+
+    public function editSpend(int $id, Request $request) {  //支出編集
+        $spending = new Spending;
+        $spend_record = $spending->find($id);
+
+        $spend_record->amount = $request->amount;
+        $spend_record->date = $request->date;
+        $spend_record->type_id = $request->type_id;
+        $spend_record->comment = $request->comment;
+
+        $spend_record->save();
+
+        return redirect('calendar');
+
     }
 
 //-------------------↑↑ここまで支出↑↑------------------------------
@@ -96,6 +134,45 @@ class RegistrationController extends Controller
         $income->comment = $request->comment;
         $income->save();
 
-        return redirect('/');
+        return redirect('child_mypage');
+    }
+
+    public function deleteIncome(int $id, Request $request) {  //収入論理削除
+        $income =  Income::find($id);
+
+        if($income) {
+            $income->delete();
+        }
+        return redirect('calendar');
+    }
+
+    public function editIncomeForm(int $id, Request $request) {
+        $income = new Income;
+        $subject1 = 'いくらもらった？';
+        $type = 0;
+
+        $income_result = $income->find($id);
+        $types = Type::where('category_type', $type)->get();
+
+        return view('detail_edit', [
+            'id' => $id,
+            'income_result' => $income_result,
+            'types' => $types,
+        ]);
+    }
+
+    public function editIncome(int $id, Request $request) {  //収入編集
+        $income = new Income;
+        $income_record = $income->find($id);
+
+        $income_record->amount = $request->amount;
+        $income_record->date = $request->date;
+        $income_record->type_id = $request->type_id;
+        $income_record->comment = $request->comment;
+
+        $income_record->save();
+
+        return redirect('calendar');
+
     }
 }
