@@ -23,8 +23,9 @@ use App\Http\Controllers\InvitationController;
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/', [DisplayController::class, 'index']);
+Route::get('/', [DisplayController::class, 'index'])->name('home');
 Route::get('/home', [DisplayController::class, 'homeindex']);
+Route::get('/graph/{year}/{month}', [DisplayController::class, 'graph'])->name('graph');
 Route::get('/create_goal',  [RegistrationController::class, 'createGoalForm'])->name('create.goal');
 Route::post('/create_goal',  [RegistrationController::class, 'createGoal']);
 Route::get('/edit_goal/{id}',  [RegistrationController::class, 'editGoalForm'])->name('edit.goal');

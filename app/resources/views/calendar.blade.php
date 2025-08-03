@@ -1,7 +1,17 @@
 @extends('layouts.app')
-
+    <a  href="{{ route('home') }}">
+        <button type="button">もどる</button>
+    </a>
 <!-- カレンダー表示用のdiv -->
 <div id="calendar" style="max-width: 70%; margin: 0 auto;"></div>
+@php
+    $now = now(); // 現在時刻取得
+    $year = $now->year;
+    $month = $now->month;
+@endphp
+    <a id="graph-link" href="#">
+        <button type="button">グラフにする</button>
+    </a>
 
 @section('scripts')
 <!-- JavaScript -->
@@ -28,6 +38,15 @@
     });
 
     calendar.render();
+
+    function updateGraphLink() {
+      const date = calendar.view.currentStart;
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      document.getElementById('graph-link').href = `/graph/${year}/${month}`;
+    }
+    updateGraphLink();
+    calendar.on('datesSet', updateGraphLink);
   });
 </script>
 @endsection

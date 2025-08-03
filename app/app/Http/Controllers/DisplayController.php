@@ -131,4 +131,34 @@ class DisplayController extends Controller
             'date' => $date
         ]);
     }
+
+    //-------------------↑↑ここまでカレンダー↑↑------------------------------
+
+    public function graph($year, $month) {
+
+        $spendData = \App\Models\Spending::whereYear('date', $year)
+        ->whereMonth('date', $month)
+        ->selectRaw('type_id, SUM(amount) as total')
+        ->groupBy('type_id')
+        ->with('type') 
+        ->get();
+
+        $totalAmount = $spendData->sum('total');
+        $graphData = $spendData->map(function ($item)  {
+            return [
+                'label' => $item->type->name ?? '未分類',
+                'value' => $item->total,
+            ];
+        });
+
+
+        $top3Categories = $spendData->sortByDesc('total')->take(3)->map(function($item) {
+            return [
+                'name' => $item->type->name ?? '未分類',
+                'amount' => $item->total,
+        ];
+        });
+
+        return view('graph', compact('year', 'month', 'graphData', 'totalAmount', 'top3Categories'));
+    }
 }
