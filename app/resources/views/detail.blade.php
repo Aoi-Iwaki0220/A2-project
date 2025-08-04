@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <a href="{{route('calendar.index')}}">
-        <button type="button">もどる</button>
-    </a>
+    <button type="button" onclick="location.href='{{ route('calendar.index')}}'">
+        もどる
+    </button>
+
     <h3>【つかったお金】</h3>
     @forelse ($spend as $item)
         <div style="margin-bottom: 20px;">
@@ -12,9 +13,9 @@
             <p>なにを：{{ $item->type->name ?? '不明' }}</p>
             <p>メモ：{{ $item->comment ?? '-' }}</p>
         </div>
-        <a href="{{ route('edit.spend', ['id' => $item->id]) }}">
-            <button type="button">へんしゅうする</button>
-        </a>
+        <button type="button" onclick="location.href='{{ route('edit.spend', ['id' => $item->id])}}'">
+        へんしゅうする
+        </button>
         <form action="{{route('delete.spend', ['id' =>$item['id']])}}" method="POST" onsubmit="return confirm('ほんとうに けしていい？')">
             @method('DELETE')
             @csrf
@@ -32,9 +33,9 @@
             <p>なにを：{{ $item->type->name ?? '不明' }}</p>
             <p>メモ：{{ $item->comment ?? '-' }}</p>
         </div>
-        <a href="{{ route('edit.income', ['id' => $item->id]) }}">
-            <button type="button">へんしゅうする</button>
-        </a>
+        <button type="button" onclick="location.href='{{ route('edit.income', ['id' => $item->id])}}'">
+        へんしゅうする
+        </button>
         <form action="{{route('delete.income', ['id' =>$item->id])}}" method="POST" onsubmit="return confirm('ほんとうに けしていい？')">
             @method('DELETE')
             @csrf

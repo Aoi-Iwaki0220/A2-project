@@ -1,77 +1,55 @@
 @extends('layouts.app')
-
 @section('content')
-<div class="container">
+  <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+      <div class="col col-md-offset-3 col-md-6">
+        <nav class="card mt-5">
+          <div class="card-header">アカウントをつくる</div>
+          <div class="card-body">
+            @if($errors->any())
+              <div class="alert alert-danger">
+                @foreach($errors->all() as $message)
+                  <p>{{ $message }}</p>
+                @endforeach
+              </div>
+            @endif
+            <form action="{{ route('register') }}" method="POST">
+              @csrf
+                <div class="form-group">
+                    <label for="name">おなまえ</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" />
                 </div>
-            </div>
-        </div>
+                <div class="form-group">
+                    <label for="nickname">ニックネーム</label>
+                    <input type="text" class="form-control" id="nickname" name="nickname" value="{{ old('nickname') }}" />
+                </div>
+                <div class="form-group">
+                    <label for="mailaddress">メールアドレス</label>
+                    <input type="text" class="form-control" id="mailaddress" name="mailaddress">
+                </div>
+                <div class="form-group">
+                    <label for="password">パスワード</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+                <div class="form-group">
+                    <label for="password-confirm">パスワード(かくにん)
+                    </label>
+                    <input type="password" class="form-control" id="password-confirm" name="password_confirmation">
+                </div>
+                <div>
+                    <label>ユーザー区分</label>
+                    <select name="user_type" required>
+                        <option value="parent">保護者）（ほごしゃ）</option>
+                        <option value="child">こども</option>
+                    </select>
+                </div>
+                <div class="text-right">
+                <button type="submit" >つくる</button>
+              </div>
+            </form>
+          </div>
+        </nav>
+      </div>
     </div>
-</div>
+  </div>
 @endsection

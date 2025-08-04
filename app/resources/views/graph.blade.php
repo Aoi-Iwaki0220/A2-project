@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
-    <a href="{{ route('calendar.index') }}">
-        <button type="button">もどる</button>
-    </a>
+    <button type="button" onclick="location.href='{{ route('calendar.index')}}'">
+            もどる
+    </button>
 
     <h2>{{ $year }}年{{ $month }}月のグラフ</h2>
     @if($top3Categories->isNotEmpty())
@@ -24,6 +24,9 @@
     @else(!isset)
         <p>この月は データがありません。</p>
     @endif
+        <button type="button" onclick="location.href='{{ route('preview.graph', ['year' => $year, 'month' => $month])}}'">
+                がぞうにする
+        </button>
 
 @endsection
 

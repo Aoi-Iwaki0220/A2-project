@@ -1,45 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
-<div id="calendar" style="max-width: 55%; "></div>
-<h4>あかは「つかったお金」/あおは「もらったおかね」</h4>
+    <div id="calendar" style="max-width: 55%; "></div>
+    <h4>あかは「つかったお金」/あおは「もらったおかね」</h4>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                        <h3>もくひょう</h3>
+                        @if  (!empty($goal))
+                            <ul>
+                                <p>
+                                    {{ \Carbon\Carbon::parse($goal->date)->format('Y年 n月 j 日') }}までに
+                                    <br>{{ $goal->amount }} 円ためる！
+                                </p>
+                            </ul>
+                            <button type="button" onclick="location.href='{{ route('edit.goal', ['id' => $goal->id])}}'">
+                                へんしゅうする
+                            </button>
+                        @else
+                            <p>もくひょうは まだ きめていないよ</p>
+                            <button type="button" onclick="location.href='{{ route('create.goal')}}'">
+                                きめる
+                            </button>
+                        @endif
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    {{ __('You are logged in!') }}
-                    <h3>もくひょう</h3>
-                    @if  (!empty($goal))
-                        <ul>
-                            <p>
-                                {{ \Carbon\Carbon::parse($goal->date)->format('Y年 n月 j 日') }}までに
-                                <br>{{ $goal->amount }} 円ためる！
-                            </p>
-                        </ul>
-                        <a href="{{ route('edit.goal', ['id' => $goal->id]) }}">
-                            <button type="button">へんしゅうする</button>
-                        </a>
-                    @else
-                        <p>もくひょうは まだ きめていないよ</p>
-                        <a href="{{ route('create.goal') }}">
-                            <button type="button" >きめる</button>
-                        </a>
-                    @endif
-
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @section('scripts')

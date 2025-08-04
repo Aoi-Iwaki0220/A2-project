@@ -22,7 +22,7 @@ class InvitationController extends Controller
         
         $invite = new Invite;
         $invite->invite_code = $code;
-        $invite->child_id = $request->child_id;
+        //$invite->child_id = $request->child_id;
         $invite->save();
         return response()->json(['invite_code' => $code]); 
     }

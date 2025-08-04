@@ -7,9 +7,13 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\UserParent;
+use App\Models\Child;
 
 class RegisterController extends Controller
 {
+
+
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -49,9 +53,11 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:30'],
+            'nickname' => ['required', 'string', 'max:30'],
+            'mailaddress' => ['required', 'string', 'email', 'max:50',],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'user_type' => ['required', 'in:parent,child'],
         ]);
     }
 
@@ -61,12 +67,24 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+    protected function create(array $data) {
+        if ($data['user_type'] === 'parent') {
+            $user = UserParent::create([
+                'name' => $data['name'],
+                'nickname' => $data['nickname'],
+                'mailaddress' => $data['mailaddress'],
+                'password' => Hash::make($data['password']),
+            ]);
+            auth()->guard('parent')->login($user);
+        }else {
+            $user = Child::create([
+                'name' => $data['name'],
+                'nickname' => $data['nickname'],
+                'mailaddress' => $data['mailaddress'],
+                'password' => Hash::make($data['password']),
+            ]);
+            auth()->guard('child')->login($user);
+        }
+        return $user;
     }
 }

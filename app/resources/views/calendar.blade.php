@@ -1,17 +1,19 @@
 @extends('layouts.app')
-    <a  href="{{ route('home') }}">
-        <button type="button">もどる</button>
-    </a>
-<!-- カレンダー表示用のdiv -->
-<div id="calendar" style="max-width: 70%; margin: 0 auto;"></div>
-@php
-    $now = now(); // 現在時刻取得
-    $year = $now->year;
-    $month = $now->month;
-@endphp
-    <a id="graph-link" href="#">
-        <button type="button">グラフにする</button>
-    </a>
+@section('content')
+        <button type="button" onclick="location.href='{{ route('home')}}'">
+            もどる
+        </button>
+    <!-- カレンダー表示用のdiv -->
+    <div id="calendar" style="max-width: 70%; margin: 0 auto;"></div>
+    @php
+        $now = now(); // 現在時刻取得
+        $year = $now->year;
+        $month = $now->month;
+    @endphp
+        <a id="graph-link" href="#">
+            <button type="button">グラフにする</button>
+        </a>
+@endsection
 
 @section('scripts')
 <!-- JavaScript -->
