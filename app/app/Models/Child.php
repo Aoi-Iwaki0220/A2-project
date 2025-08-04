@@ -25,4 +25,22 @@ class Child extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function income() {
+        return $this->hasMany('App\Models\Income');
+    }
+
+    public function spend() {
+        return $this->hasMany('App\Models\Spending');
+    }
+
+    public function goal() {
+        return $this->hasMany('App\Models\Goal');
+    }
+
+    public function invite() {
+        return $this->hasMany('App\Models\Invite');
+    }
+
+
 }

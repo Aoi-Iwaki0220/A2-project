@@ -9,22 +9,27 @@
             <div class="col-md-8">
                 <div class="card">
                         <h3>もくひょう</h3>
-                        @if  (!empty($goal))
-                            <ul>
-                                <p>
-                                    {{ \Carbon\Carbon::parse($goal->date)->format('Y年 n月 j 日') }}までに
-                                    <br>{{ $goal->amount }} 円ためる！
-                                </p>
-                            </ul>
-                            <button type="button" onclick="location.href='{{ route('edit.goal', ['id' => $goal->id])}}'">
-                                へんしゅうする
-                            </button>
-                        @else
-                            <p>もくひょうは まだ きめていないよ</p>
-                            <button type="button" onclick="location.href='{{ route('create.goal')}}'">
-                                きめる
-                            </button>
-                        @endif
+                            @if  (!empty($goal))
+                                <ul>
+                                    <p>
+                                        {{ \Carbon\Carbon::parse($goal->date)->format('Y年 n月 j 日') }}までに
+                                        <br>{{ $goal->amount }} 円ためる！
+                                    </p>
+                                </ul>
+                                @if (session('user_type') === 'child')
+                                    <button type="button" onclick="location.href='{{ route('edit.goal', ['id' => $goal->id])}}'">
+                                        へんしゅうする
+                                    </button>
+                                 @endif
+                            @else
+                                <p>もくひょうは まだ きめていないよ</p>
+                                @if (session('user_type') === 'child')
+                                    <button type="button" onclick="location.href='{{ route('create.goal')}}'">
+                                        きめる
+                                    </button>
+                                @endif
+                            @endif
+                           
 
                     </div>
                 </div>

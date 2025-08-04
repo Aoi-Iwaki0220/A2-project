@@ -30,8 +30,9 @@
                 <div>
                     <label>ユーザー区分</label>
                     <select name="user_type" required>
-                        <option value="parent">保護者）（ほごしゃ）</option>
                         <option value="child">こども</option>
+                        <option value="parent">保護者（ほごしゃ）</option>
+
                     </select>
                 </div>
                 <div class="text-right">

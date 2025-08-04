@@ -49,6 +49,25 @@ class LoginController extends Controller
         return auth()->guard($guard)->attempt($login, $request->filled('remember'));
     }
 
+    protected function authenticated(Request $request, $user)
+    {
+    // user_typeをセッションに記録（parent or child）
+        session(['user_type' => $request->input('user_type')]);
+
+        return redirect('/home');
+    }
+
+    public function logout(Request $request)  //ログアウトしたらログアウト前のURLを消す→HOMEに
+    {
+        Auth::guard(session('user_type'))->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        $request->session()->forget('url.intended');
+
+        return redirect('/login');
+    }
+
     public function __construct()
     {
         $this->middleware('guest')->except('logout');

@@ -13,14 +13,17 @@
             <p>なにを：{{ $item->type->name ?? '不明' }}</p>
             <p>メモ：{{ $item->comment ?? '-' }}</p>
         </div>
-        <button type="button" onclick="location.href='{{ route('edit.spend', ['id' => $item->id])}}'">
-        へんしゅうする
-        </button>
-        <form action="{{route('delete.spend', ['id' =>$item['id']])}}" method="POST" onsubmit="return confirm('ほんとうに けしていい？')">
-            @method('DELETE')
-            @csrf
-            <button type="submit">けす</button>
-        </form>
+
+        @if (session('user_type') === 'child')
+            <button type="button" onclick="location.href='{{ route('edit.spend', ['id' => $item->id])}}'">
+            へんしゅうする
+            </button>
+            <form action="{{route('delete.spend', ['id' =>$item['id']])}}" method="POST" onsubmit="return confirm('ほんとうに けしていい？')">
+                @method('DELETE')
+                @csrf
+                <button type="submit">けす</button>
+            </form>
+        @endif
     @empty
         <p>この日はお金をつかっていないよ</p>
     @endforelse
@@ -33,14 +36,17 @@
             <p>なにを：{{ $item->type->name ?? '不明' }}</p>
             <p>メモ：{{ $item->comment ?? '-' }}</p>
         </div>
-        <button type="button" onclick="location.href='{{ route('edit.income', ['id' => $item->id])}}'">
-        へんしゅうする
-        </button>
-        <form action="{{route('delete.income', ['id' =>$item->id])}}" method="POST" onsubmit="return confirm('ほんとうに けしていい？')">
-            @method('DELETE')
-            @csrf
-            <button type="submit">けす</button>
-        </form>
+
+        @if (session('user_type') === 'child')
+            <button type="button" onclick="location.href='{{ route('edit.income', ['id' => $item->id])}}'">
+            へんしゅうする
+            </button>
+            <form action="{{route('delete.income', ['id' =>$item->id])}}" method="POST" onsubmit="return confirm('ほんとうに けしていい？')">
+                @method('DELETE')
+                @csrf
+                <button type="submit">けす</button>
+            </form>
+        @endif
     @empty
         <p>この日はお金をもらっていないよ</p>
     @endforelse
