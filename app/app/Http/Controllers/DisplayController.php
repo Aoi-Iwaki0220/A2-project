@@ -22,8 +22,9 @@ class DisplayController extends Controller
     }
 
     public function Sindex() {
+        $childId = auth('child')->id(); 
         $spending = new Spending;
-        $spends = $spending->all();
+        $spends = Spending::where('user_id', $childId)->with('type')->get();
 
         $spend_with_type = $spending->with('type')->first()->toArray();
 
@@ -33,8 +34,9 @@ class DisplayController extends Controller
     }
 
     public function Iindex() {
+        $childId = auth('child')->id(); 
         $income = new Spending;
-        $incomes = $income->all();
+        $incomes = Income::where('user_id', $childId)->with('type')->get();
 
         $income_with_type = $income->with('type')->first()->toArray();
 
@@ -46,14 +48,17 @@ class DisplayController extends Controller
 
     public function getEventsWithAmount()  //金額も表示→calendar.php
     {
+        $childId = auth('child')->id(); 
         $events = [];
 
-        $spendings = Spending::select('date', \DB::raw('SUM(amount) as total_amount'))
+        $spendings = Spending::where('user_id', $childId)
+                    ->select('date', \DB::raw('SUM(amount) as total_amount'))
                     ->groupBy('date')
                     ->get();
-        $incomes = Income::select('date', \DB::raw('SUM(amount) as total_amount'))
-                         ->groupBy('date')
-                         ->get();
+        $incomes = Income::where('user_id', $childId)
+                    ->select('date', \DB::raw('SUM(amount) as total_amount'))
+                    ->groupBy('date')
+                    ->get();
 
         foreach ($spendings as $spend) {
             $events[] = [
@@ -78,14 +83,17 @@ class DisplayController extends Controller
 
     public function getEventsColorOnly()  //色のみ表示見見→home.php
     {
+        $childId = auth('child')->id(); 
         $events = [];
 
-        $spendings = Spending::select('date', \DB::raw('SUM(amount) as total_amount'))
-                    ->groupBy('date')
-                    ->get();
-        $incomes = Income::select('date', \DB::raw('SUM(amount) as total_amount'))
-                         ->groupBy('date')
-                         ->get();
+        $spendings = Spending::where('user_id', $childId)
+                        ->select('date', \DB::raw('SUM(amount) as total_amount'))
+                        ->groupBy('date')
+                        ->get();
+        $incomes = Income::where('user_id', $childId)
+                        ->select('date', \DB::raw('SUM(amount) as total_amount'))
+                        ->groupBy('date')
+                        ->get();
 
         foreach ($spendings as $spend) {
             $events[] = [
@@ -121,9 +129,15 @@ class DisplayController extends Controller
     }
 
     public function detailCalendar($date) {
-
-        $spending = Spending::whereDate('date', $date)->with('type')->get();
-        $income = Income::whereDate('date', $date)->with('type')->get();
+        $childId = auth('child')->id(); 
+        $spending = Spending::where('user_id', $childId)
+                    ->whereDate('date', $date)
+                    ->with('type')
+                    ->get();
+        $income = Income::where('user_id', $childId)
+                    ->whereDate('date', $date)
+                    ->with('type')
+                    ->get();
 
         return view('detail',[
             'spend' => $spending,
@@ -135,13 +149,14 @@ class DisplayController extends Controller
     //-------------------↑↑ここまでカレンダー↑↑------------------------------
 
     public function graph($year, $month) {  //グラフ表示
-
-        $spendData = \App\Models\Spending::whereYear('date', $year)
-        ->whereMonth('date', $month)
-        ->selectRaw('type_id, SUM(amount) as total')
-        ->groupBy('type_id')
-        ->with('type') 
-        ->get();
+        $childId = auth('child')->id();
+        $spendData = Spending::where('user_id', $childId)
+                        ->whereYear('date', $year)
+                        ->whereMonth('date', $month)
+                        ->selectRaw('type_id, SUM(amount) as total')
+                        ->groupBy('type_id')
+                        ->with('type') 
+                        ->get();
 
         $totalAmount = $spendData->sum('total');
         $graphData = $spendData->map(function ($item)  {
@@ -163,13 +178,14 @@ class DisplayController extends Controller
     }
 
     public function previewGraph($year, $month) {  //グラフPDF
-
-            $spendData = \App\Models\Spending::whereYear('date', $year)
-            ->whereMonth('date', $month)
-            ->selectRaw('type_id, SUM(amount) as total')
-            ->groupBy('type_id')
-            ->with('type') 
-            ->get();
+            $childId = auth('child')->id();
+            $spendData = Spending::where('user_id', $childId)
+                        ->whereYear('date', $year)
+                        ->whereMonth('date', $month)
+                        ->selectRaw('type_id, SUM(amount) as total')
+                        ->groupBy('type_id')
+                        ->with('type') 
+                        ->get();
 
         $totalAmount = $spendData->sum('total');
         $graphData = $spendData->map(function ($item)  {

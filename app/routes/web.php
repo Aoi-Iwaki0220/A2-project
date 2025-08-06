@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,7 +22,13 @@ use App\Http\Controllers\InvitationController;
 //});
 
 Auth::routes();
-
+Route::get('/password/reset/form', function() {
+    $token = 'sample-token';  // 本来はメールのリンクから受け取るトークンをここに渡す必要あり
+    return view('password_reset', compact('token'));
+});
+    Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+    Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['parentOrChild']], function () {
@@ -59,7 +67,7 @@ Route::group(['middleware' => ['auth:child', 'child']], function () {
 Route::group(['middleware' => ['auth:parent', 'parent']], function () {
     Route::get('/invitation',  [InvitationController::class, 'invitationForm'])->name('invitation');
     Route::post('/invitation',  [InvitationController::class, 'invitation']);
-    
+
     Route::get('/parent_mypage', function () {
         return view('parent_mypage');
     })->name('parent.mypage');

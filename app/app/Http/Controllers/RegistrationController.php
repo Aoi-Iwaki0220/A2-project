@@ -71,6 +71,7 @@ class RegistrationController extends Controller
         $spending->amount = $request->amount;
         $spending->type_id = $request->type_id;
         $spending->comment = $request->comment;
+        $spending->user_id = auth('child')->id();
         $spending->save();
 
         return redirect('child_mypage');

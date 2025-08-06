@@ -26,4 +26,14 @@ class UserParent extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function getEmailAttribute()
+    {
+        return $this->mailaddress;
+    }
+
+    public function getEmailForPasswordReset()
+    {
+        return $this->mailaddress;
+    }
 }

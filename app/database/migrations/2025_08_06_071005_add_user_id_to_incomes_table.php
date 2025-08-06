@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('goals', function (Blueprint $table) {
-            $table->id();
-            $table->integer('amount');
-            $table->date('date');
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('incomes', function (Blueprint $table) {
+            $table->integer('user_id');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('goals');
+        Schema::table('incomes', function (Blueprint $table) {
+            $table->dropColumn('user_id');
+        });
     }
 };

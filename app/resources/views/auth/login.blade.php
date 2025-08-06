@@ -25,7 +25,7 @@
                     <input type="password" class="form-control" id="password" name="password" />
                 </div>
                 <div class="text-center">
-                    <a href="">パスワードをわすれたひとはこちら</a>
+                    <a href="{{ route('password.request') }}">パスワードをわすれたひとはこちら</a>
                 </div>
                 <div>
                     <label>ユーザー区分</label>

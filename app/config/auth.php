@@ -111,12 +111,24 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
+
+    'users' => [
+        'provider' => 'users',
+        'table' => 'password_resets',
+        'expire' => 60,
+    ],
+
+    'parents' => [
+        'provider' => 'parents',
+        'table' => 'password_resets',
+        'expire' => 60,
+    ],
+
+    'children' => [
+        'provider' => 'children',
+        'table' => 'password_resets',
+        'expire' => 60,
+    ],
     ],
 
     /*
