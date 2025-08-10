@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <main>
-        <div>へんしゅうする</div>
+        <h4>へんしゅうする</h4>
 
         @if (isset($income_result))
         <form action="{{ route('edit.income', ['id' => $income_result->id ]) }}" method="post">

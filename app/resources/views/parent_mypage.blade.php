@@ -1,31 +1,57 @@
 @extends('layouts.app')
 @section('content')
     <div class=profile style="display: flex; align-items: center;">
-        <div style="border-radius: 50%; background-color: #ccc; width: 80px; height: 80px; "></div>
+        @if (!empty($parent->image))
+            <img src="{{ asset($parent->image) }}" alt="アイコン" style="width:20%; height:20%; border-radius:50%;">
+        @else
+            <img src="character1.png"  style="width:20%; height:20%; border-radius:50%;">
+        @endif
+        @if (session('success'))
+            <script>
+                window.addEventListener('DOMContentLoaded', function () {
+                    alert(@json(session('success')));
+                });
+            </script>
+        @endif
         <div>
             <h4>ユーザー名</h4>
-                <span style="color:#eee;">未登録</span>
+                <span>{{ $parent->name ?? '未登録'}}</span>
             <h4>ニックネーム</h4>
-                <span style="color:#eee;">未登録</span>
+                <span>{{ $parent->nickname ?? '未登録'}}</span>
         </div>
         <div>
             <h4>プロフィール</h4>
-                <span style="color:#eee;">未登録</span>
+                <span>{{ $parent->profile ?? '未登録'}}</span>
         </div>
     </div>
+        <button type="button" onclick="location.href='{{ route('edit.parent')}}'">
+            編集する
+        </button>
         <div>
-            <a href="">
-                <button type="button">編集する</button>
-            </a>
-        </div>
-        <div>
-            <a href="">
-                <button type="button">メッセージを送る</button>
-            </a>
+            <button type="button" onclick="location.href='{{ route('send.message')}}'">
+                メッセージを送る
+            </button>
             <button type="button" onclick="location.href='{{route('invitation')}}'">
                 招待コード入力
             </button>
         </div>
+        <nav class="card mt-4">
+            <div class="card-body">
+                <h3>こどもの情報</h3>
+                @if ($child)
+                    <img src="{{ $child->image ? asset($child->image) : asset('character1.png') }}" alt="アイコン" style="width:20%; height:20%; border-radius:50%;">
+                    <p>ニックネーム: {{ $child->nickname }}</p>
+                    <p>お小遣い合計: {{ $child->nickname }}</p>
+                    <form action="{{route('unlink.child')}}" method="POST" onsubmit="return confirm('紐づけを解除しますか？');">
+                        @csrf
+                        <button type="submit">紐づけを解除する</button>
+                    </form>
+                @else
+                    <p>紐づいた子どもはいません</p>
+                @endif
+            </div>
+        </nav>
+
 @endsection
 
 

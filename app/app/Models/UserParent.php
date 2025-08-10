@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Child;
 
 
 class UserParent extends Authenticatable
@@ -18,6 +19,8 @@ class UserParent extends Authenticatable
      protected $fillable = [
         'name',
         'nickname',
+        'profile',
+        'image',
         'mailaddress',
         'password',
     ];
@@ -35,5 +38,10 @@ class UserParent extends Authenticatable
     public function getEmailForPasswordReset()
     {
         return $this->mailaddress;
+    }
+
+    public function child()
+    {
+        return $this->hasOne(Child::class, 'parent_id');
     }
 }

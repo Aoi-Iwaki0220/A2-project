@@ -12,9 +12,9 @@
 
         <span>1ばん おおかったのは
             [{{ $top3Categories[0]['name'] }}]で{{($top3Categories[0]['amount']) }}円
-            <br>次に
+            <br>
             @if(isset($top3Categories[1]))
-                [{{ $top3Categories[1]['name'] }}]で{{($top3Categories[1]['amount']) }}円
+                次に[{{ $top3Categories[1]['name'] }}]で{{($top3Categories[1]['amount']) }}円
             @endif
             <br>@if(isset($top3Categories[2]))
                 [{{ $top3Categories[2]['name'] }}]で{{($top3Categories[2]['amount']) }}円

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\UserParent;
 
 class Child extends Authenticatable
 {
@@ -17,6 +18,8 @@ class Child extends Authenticatable
     protected $fillable = [
         'name',
         'nickname',
+        'profile',
+        'image',
         'mailaddress',
         'password',
     ];
@@ -27,20 +30,23 @@ class Child extends Authenticatable
     ];
 
     public function income() {
-        return $this->hasMany('App\Models\Income');
+        return $this->hasMany(Income::class);
     }
 
     public function spend() {
-        return $this->hasMany('App\Models\Spending');
+        return $this->hasMany(Spending::class);
     }
-
+    
     public function goal() {
-        return $this->hasMany('App\Models\Goal');
+        return $this->hasMany(Goal::class);
     }
 
     public function invite() {
-        return $this->hasMany('App\Models\Invite');
+        return $this->hasMany(Invite::class);
     }
 
-
+    public function parent()
+    {
+        return $this->belongsTo(UserParent::class, 'parent_id');
+    }
 }

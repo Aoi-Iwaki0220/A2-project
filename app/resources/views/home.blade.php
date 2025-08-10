@@ -1,6 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+  /* カレンダーの日付のリンクに対してスタイルを適用 */
+  .fc-daygrid-day a {
+    color: inherit !important;
+    text-decoration: none !important;
+    height: 100%;
+  }
+
+  .fc-col-header-cell-cushion {
+    cursor: default !important;
+    color:rgb(0, 0, 0) !important; 
+    font-weight: bold;
+}
+
+  .fc-col-header-cell a,
+  .fc-col-header-cell[role="link"] {
+    text-decoration: none !important;
+    cursor: default !important;
+    color: inherit !important;
+  }
+</style>
+
     <div id="calendar" style="max-width: 55%; "></div>
     <h4>あかは「つかったお金」/あおは「もらったおかね」</h4>
 

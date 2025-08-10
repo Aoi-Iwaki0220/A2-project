@@ -5,15 +5,19 @@ use App\Models\Goal;
 use App\Models\Spending;
 use App\Models\Income;
 use App\Models\Type;
+use App\Models\Child;
+use App\Models\UserParent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DisplayController extends Controller
 {
     public function index() {//目標表示
+        $childId = auth('child')->id();
         $today = Carbon::today();
-        $goal = Goal::whereDate('date', '>=', $today)->first();
-        $events = $this->getEventsColorOnly(); 
+        $goal = Goal::where('user_id', $childId)->whereDate('date', '>=', $today)->first();
+        $events = $this->getEventsColorOnly($childId); 
 
         return view('home', [
             'goal' => $goal,
@@ -22,11 +26,10 @@ class DisplayController extends Controller
     }
 
     public function Sindex() {
-        $childId = auth('child')->id(); 
+        $childId = auth('child')->id();
         $spending = new Spending;
         $spends = Spending::where('user_id', $childId)->with('type')->get();
 
-        $spend_with_type = $spending->with('type')->first()->toArray();
 
         return view('spend', [
             'spends' => $spends
@@ -34,11 +37,10 @@ class DisplayController extends Controller
     }
 
     public function Iindex() {
-        $childId = auth('child')->id(); 
+        $childId = auth('child')->id();
         $income = new Spending;
         $incomes = Income::where('user_id', $childId)->with('type')->get();
 
-        $income_with_type = $income->with('type')->first()->toArray();
 
         return view('income', [
             'incomes' => $incomes
@@ -48,7 +50,7 @@ class DisplayController extends Controller
 
     public function getEventsWithAmount()  //金額も表示→calendar.php
     {
-        $childId = auth('child')->id(); 
+        $childId = auth('child')->id();
         $events = [];
 
         $spendings = Spending::where('user_id', $childId)
@@ -83,7 +85,7 @@ class DisplayController extends Controller
 
     public function getEventsColorOnly()  //色のみ表示見見→home.php
     {
-        $childId = auth('child')->id(); 
+        $childId = auth('child')->id();
         $events = [];
 
         $spendings = Spending::where('user_id', $childId)
@@ -129,7 +131,7 @@ class DisplayController extends Controller
     }
 
     public function detailCalendar($date) {
-        $childId = auth('child')->id(); 
+        $childId = auth('child')->id();
         $spending = Spending::where('user_id', $childId)
                     ->whereDate('date', $date)
                     ->with('type')
@@ -145,6 +147,7 @@ class DisplayController extends Controller
             'date' => $date
         ]);
     }
+
 
     //-------------------↑↑ここまでカレンダー↑↑------------------------------
 
@@ -206,5 +209,31 @@ class DisplayController extends Controller
         return view('pdf', compact('year', 'month', 'graphData', 'totalAmount', 'top3Categories'));
     }
      //-------------------↑↑ここまでグラフ↑↑------------------------------
+
+    //----------------マイページ---------------------------------------
+    public function childMypage() {
+        $child = auth('child')->user();
+        $parent = $child ? $child->parent : null;
+        return view('child_mypage', compact('parent', 'child'));
+    }
+
+    public function parentMypage() {
+        $parent = auth('parent')->user();
+        $child = $parent->child;
+        
+        return view('parent_mypage', compact('parent', 'child'));
+    }
+
+    public function unlinkChild(){  //子供との紐づけ解除
+        $parent = auth('parent')->user();
+        $child = $parent->child; 
+
+        if ($child) {
+            $child->parent_id = null;
+            $child->save();
+        }
+
+        return redirect()->route('parent.mypage')->with('success', 'こどもとの紐づけを解除しました');
+    }
 
 }

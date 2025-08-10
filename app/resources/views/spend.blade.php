@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <main>
-        <div>つかったお金</div>
+        <h4>つかったお金</h4>
         <form action="{{route('create.spend')}}" method="post">
             @csrf
             <label for="date">いつ？</label>

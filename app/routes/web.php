@@ -6,6 +6,8 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\MessageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,7 +25,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 
 Auth::routes();
 Route::get('/password/reset/form', function() {
-    $token = 'sample-token';  // 本来はメールのリンクから受け取るトークンをここに渡す必要あり
+    $token = 'sample-token';  
     return view('password_reset', compact('token'));
 });
     Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -31,15 +33,19 @@ Route::get('/password/reset/form', function() {
     Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => ['parentOrChild']], function () {
+Route::group(['middleware' => ['parentOrChild']], function () {  //保護者とこども共通
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/home', [DisplayController::class, 'homeindex']);
     Route::get('/', [DisplayController::class, 'index'])->name('home');
     Route::get('/detail_calendar/{date}', [DisplayController::class, 'detailCalendar'])->name('detail.calendar');
     Route::get('/calendar', [DisplayController::class, 'calendarIndex'])->name('calendar.index');
     Route::get('/graph/{year}/{month}', [DisplayController::class, 'graph'])->name('graph');
     Route::get('/preview_graph/{year}/{month}', [DisplayController::class, 'previewGraph'])->name('preview.graph');
+    Route::post('/message_read/{id}',  [MessageController::class, 'messageRead'])->name('message.read');
+    
 });    
-Route::group(['middleware' => ['auth:child', 'child']], function () {   
+
+Route::group(['middleware' => ['auth:child', 'child']], function () {    //こどものみ 
     Route::get('/create_goal',  [RegistrationController::class, 'createGoalForm'])->name('create.goal');
     Route::post('/create_goal',  [RegistrationController::class, 'createGoal']);
     Route::get('/edit_goal/{id}',  [RegistrationController::class, 'editGoalForm'])->name('edit.goal');
@@ -56,19 +62,20 @@ Route::group(['middleware' => ['auth:child', 'child']], function () {
     Route::get('/edit_spend/{id}',  [RegistrationController::class, 'editSpendForm'])->name('edit.spend');
     Route::post('/edit_spend/{id}',  [RegistrationController::class, 'editSpend']);
     Route::get('/create_invitation',  [InvitationController::class, 'createInvitation'])->name('create.invitation');
-
-    
-
-    Route::get('/child_mypage', function () {
-        return view('child_mypage');
-    })->name('child.mypage');
-
+    Route::get('/child_mypage', [DisplayController::class, 'childMypage'])->name('child.mypage');
+    Route::get('/edit_child',  [RegistrationController::class, 'editChildForm'])->name('edit.child');
+    Route::post('/edit_child',  [RegistrationController::class, 'editChild']);
+    Route::get('/message_list',  [MessageController::class, 'messageListForm'])->name('message.list');
+    Route::post('/message_list',  [MessageController::class, 'messagelist']);
 });
+
 Route::group(['middleware' => ['auth:parent', 'parent']], function () {
     Route::get('/invitation',  [InvitationController::class, 'invitationForm'])->name('invitation');
-    Route::post('/invitation',  [InvitationController::class, 'invitation']);
-
-    Route::get('/parent_mypage', function () {
-        return view('parent_mypage');
-    })->name('parent.mypage');
+    Route::post('/invitation',  [InvitationController::class, 'invitationCode']);
+    Route::get('/parent_mypage', [DisplayController::class, 'parentMypage'])->name('parent.mypage');
+    Route::get('/edit_parent',  [RegistrationController::class, 'editParentForm'])->name('edit.parent');
+    Route::post('/edit_parent',  [RegistrationController::class, 'editParent']);
+    Route::post('/unlink_child', [DisplayController::class, 'unlinkChild'])->name('unlink.child');
+    Route::get('send_message', [MessageController::class, 'sendMessageForm'])->name('send.message');
+    Route::post('send_message', [MessageController::class, 'sendMessage']);
 });

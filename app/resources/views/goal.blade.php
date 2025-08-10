@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <main>
-        <div>もくひょうをきめよう</div>
+        <h4>もくひょうをきめよう</h4>
         <form action="{{ route('create.goal')}}" method="post">
             @csrf
             <label for="date">いつ？</label>

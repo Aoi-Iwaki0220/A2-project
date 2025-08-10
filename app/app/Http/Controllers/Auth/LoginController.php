@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     /*
@@ -45,7 +46,6 @@ class LoginController extends Controller
             return false;
         }
 
-        // user_typeに応じたガードで認証
         return auth()->guard($guard)->attempt($login, $request->filled('remember'));
     }
 
@@ -57,13 +57,16 @@ class LoginController extends Controller
         return redirect('/home');
     }
 
-    public function logout(Request $request)  //ログアウトしたらログアウト前のURLを消す→HOMEに
+    public function logout(Request $request)
     {
-        Auth::guard(session('user_type'))->logout();
+        $guard = session('user_type');
 
+        if ($guard && in_array($guard, ['parent', 'child'])) {
+            Auth::guard($guard)->logout();
+        }
+        $request->session()->forget('user_type');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        $request->session()->forget('url.intended');
 
         return redirect('/login');
     }
@@ -71,11 +74,11 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
+        $this->middleware('auth:parent,child')->only('logout');
     }
 
     protected function redirectTo() {
         return '/home';
     }
-    
+
 }

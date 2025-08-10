@@ -1,5 +1,34 @@
 @extends('layouts.app')
 @section('content')
+<style>
+  /* カレンダーの日付のリンクに対してスタイルを適用 */
+  .fc-daygrid-day a {
+    color: inherit !important;
+    text-decoration: none !important;
+    cursor: pointer;
+    display: block; /* セル全体をクリック可能に */
+    height: 100%;
+  }
+
+  .fc-daygrid-day a:hover {
+    background-color: #e0e0e0 !important;
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  .fc-col-header-cell-cushion {
+    cursor: default !important;
+    color:rgb(0, 0, 0) !important; 
+    font-weight: bold;
+}
+
+  .fc-col-header-cell a,
+  .fc-col-header-cell[role="link"] {
+    text-decoration: none !important;
+    cursor: default !important;
+    color: inherit !important;
+  }
+</style>
         <button type="button" onclick="location.href='{{ route('home')}}'">
             もどる
         </button>
@@ -11,7 +40,7 @@
         $month = $now->month;
     @endphp
         <a id="graph-link" href="#">
-            <button type="button">グラフにする</button>
+            <button type="button" >グラフにする</button>
         </a>
 @endsection
 

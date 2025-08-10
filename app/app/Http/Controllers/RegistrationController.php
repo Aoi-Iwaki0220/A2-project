@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Goal;
 use App\Models\Spending;
 use App\Models\Income;
 use App\Models\Type;
+use App\Models\Child;
 
 
 class RegistrationController extends Controller
@@ -20,6 +22,7 @@ class RegistrationController extends Controller
 
         $goal->date = $request->date;
         $goal->amount = $request->amount;
+        $goal->user_id = auth('child')->id();
         $goal->save();
 
         return redirect('/');
@@ -133,6 +136,7 @@ class RegistrationController extends Controller
         $income->amount = $request->amount;
         $income->type_id = $request->type_id;
         $income->comment = $request->comment;
+        $income->user_id =  auth('child')->id();
         $income->save();
 
         return redirect('child_mypage');
@@ -176,4 +180,51 @@ class RegistrationController extends Controller
         return redirect('calendar');
 
     }
+    //-------------------↑↑ここまで収入↑↑------------------------------
+
+    //----------------マイページ---------------------------------------
+    public function editChildForm() {
+        $child = auth('child')->user();
+        return view('mypage_edit', [
+            'user' => $child, 
+            'type' => 'child',
+            'child' => $child,
+            'parent' => null,
+        ]);
+    }
+
+    public function editChild(Request $request) {  //こども編集
+        $child = auth('child')->user();
+        $child->name = $request->name;
+        $child->nickname = $request->nickname;
+        $child->profile = $request->profile;
+        $child->image = $request->image;
+        $child->save();
+
+        return redirect()->route('child.mypage');
+    }
+
+    public function editParentForm() {
+        $parent = auth('parent')->user();
+        return view('mypage_edit', [
+            'user' => $parent,
+            'type' => 'parent',
+            'child' => null,
+            'parent' => $parent,
+            ]);
+    }
+
+    public function editParent(Request $request) {  //保護者編集
+        $parent = auth('parent')->user();
+        $parent->name = $request->name;
+        $parent->nickname = $request->nickname;
+        $parent->profile = $request->profile;
+        $parent->image = $request->image;
+        $parent->save();
+
+        return redirect()->route('parent.mypage');
+    }
+
+
 }
+

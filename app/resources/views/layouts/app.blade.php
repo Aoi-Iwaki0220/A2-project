@@ -17,62 +17,67 @@
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
 </head>
 <body>
-    <div id="app">
-        <ul class="navbar-nav ms-auto">
-    @if (session('user_type') === 'parent')
-        <li class="nav-item dropdown">
-            {{ Auth::guard('parent')->user()->name }}
-            <div class="dropdown-menu dropdown-menu-end">
-                <a class="dropdown-item" href="{{ route('logout') }}"
-                   onclick="event.preventDefault();
-                             document.getElementById('logout-form').submit();">
-                    ログアウト
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
-            </div>
-        </li>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img src="{{ asset('logo1.png') }}" alt="ロゴ" style="width: 150px;">
+        </a>
 
-    @elseif (session('user_type') === 'child')
-        <li class="nav-item dropdown">
-            {{ Auth::guard('child')->user()->name }}
-            <div class="dropdown-menu dropdown-menu-end">
-                <a class="dropdown-item" href="{{ route('logout') }}"
-                   onclick="event.preventDefault();
-                             document.getElementById('logout-form').submit();">
-                    ログアウト
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
-            </div>
-        </li>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                @php
+                    $user = null;
+                    if (Auth::guard('parent')->check()) {
+                        $user = Auth::guard('parent')->user();
+                    } elseif (Auth::guard('child')->check()) {
+                        $user = Auth::guard('child')->user();
+                    }
+                    @endphp
 
-    @else
-        {{-- ログインしていない時 --}}
-        @if (Route::has('login'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('login') }}">ログイン</a>
-            </li>
-        @endif
-        @if (Route::has('register'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('register') }}">新規登録</a>
-            </li>
-        @endif
-    @endif
-</ul>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+                @if ($user)
+                    <li class="nav-item d-flex align-items-center gap-2">
+                        @if (Auth::guard('parent')->check())
+                            <a href="{{ route('parent.mypage') }}">
+                        @elseif (Auth::guard('child')->check())
+                            <a href="{{ route('child.mypage') }}">
+                        @else
+                            <a href="#">
+                        @endif
+                        
+                        @if (!empty($user->image))
+                            <img src="{{ asset($user->image) }}" alt="アイコン" style="width:45px; height:45px; border-radius:50%;">
+                        @else
+                            <img src="{{ asset('character1.png') }}" style="width:45px; height:45px; border-radius:50%;">
+                        @endif
+                        <span class="nav-link">{{ $user->nickname }}</span>
+                        <a class="nav-link" href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            ログアウト
+                        </a>
+                    </li>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">ログイン</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('register') }}">新規登録</a>
+                    </li>
+                @endif
+            </ul>
+        </div>
     </div>
+</nav>
+@yield('content')
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     @yield('scripts')
+    
 </body>
 </html>

@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\MessageController;
 
 class ParentMiddleware
 {
@@ -16,7 +17,7 @@ class ParentMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('child')->check()) {
+        if (Auth::guard('parent')->check()) {
             return $next($request);
         }
         return redirect('/login');
