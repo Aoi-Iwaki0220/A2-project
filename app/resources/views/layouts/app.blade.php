@@ -21,44 +21,46 @@
     
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light " style="background-color: rgb(80, 228, 203);">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-            <img src="{{ asset('logo1.png') }}" alt="ロゴ" style="width: 150px;">
+        <a class="navbar-brand" href="/home">
+            <img src="{{ asset('logo1.png') }}" alt="ロゴ" style="width: 150px; margin-left: 1rem;">
         </a>
 
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse ">
             <ul class="navbar-nav ms-auto">
-                @php
-                    $user = null;
-                    if (Auth::guard('parent')->check()) {
-                        $user = Auth::guard('parent')->user();
-                    } elseif (Auth::guard('child')->check()) {
-                        $user = Auth::guard('child')->user();
-                    }
-                    @endphp
-
-                @if ($user)
-                    <li class="nav-item d-flex align-items-center gap-2">
-                        @if (Auth::guard('parent')->check())
-                            <a href="{{ route('parent.mypage') }}">
-                        @elseif (Auth::guard('child')->check())
-                            <a href="{{ route('child.mypage') }}">
-                        @else
-                            <a href="#">
-                        @endif
-                        
-                        @if (!empty($user->image))
-                            <img src="{{ asset($user->image) }}" alt="アイコン" style="width:45px; height:45px; border-radius:50%;">
-                        @else
-                            <img src="{{ asset('character1.png') }}" style="width:45px; height:45px; border-radius:50%;">
-                        @endif
-                        <span class="nav-link">{{ $user->nickname }}</span>
-                        <a class="nav-link" href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            ログアウト
+                <li class="nav-item d-flex align-items-center gap-3">
+                        @php
+                            $user = null;
+                            if (Auth::guard('parent')->check()) {
+                                $user = Auth::guard('parent')->user();
+                            } elseif (Auth::guard('child')->check()) {
+                                $user = Auth::guard('child')->user();
+                            }
+                        @endphp
+                    <div class="px-2 py-1">
+                        @if ($user)
+                            @if (Auth::guard('parent')->check())
+                                <a href="{{ route('parent.mypage') }}" class="d-flex align-items-center text-decoration-none text-dark">
+                            @elseif (Auth::guard('child')->check())
+                                <a href="{{ route('child.mypage') }}" class="d-flex align-items-center text-decoration-none text-dark">
+                            @else
+                                <a href="#">
+                            @endif
+                            
+                            @if (!empty($user->image))
+                                <img src="{{ asset($user->image) }}" alt="アイコン" style="width:45px; height:45px; border-radius:50%;">
+                            @else
+                                <img src="{{ asset('character1.png') }}" style="width:45px; height:45px; border-radius:50%;">
+                            @endif
+                            <span style="margin-left: 12px; font-weight: bold;">{{ $user->nickname }}</span>
                         </a>
-                    </li>
+                    </div>
+                    <a class="nav-link" href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="margin-right: 1rem; font-weight: bold;">
+                          ログアウト
+                    </a>
+                </li>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
@@ -67,7 +69,7 @@
                         <a class="nav-link" href="{{ route('login') }}">ログイン</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">新規登録</a>
+                        <a class="nav-link" href="{{ route('register') }}" style="margin-right: 1rem;">新規登録</a>
                     </li>
                 @endif
             </ul>

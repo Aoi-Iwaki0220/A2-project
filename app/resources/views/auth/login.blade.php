@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
       <div class="col col-md-offset-3 col-md-6">
         <nav class="card mt-5">
-          <div class="card-header">ログイン</div>
+          <h3 style="text-align: center; margin-top: 10px;">ログイン</h3>
           <div class="card-body">
             @if($errors->any())
               <div class="alert alert-danger">
@@ -35,8 +35,8 @@
 
                     </select>
                 </div>
-                <div class="text-right">
-                    <button type="submit" >ログイン</button>
+                <div class="text-right ">
+                    <button type="submit" class="btn btn-primary">ログイン</button>
                 </div>
                 <div class="text-center">
                     <a href="{{ route('register') }}">はじめてのひとはこちら</a>

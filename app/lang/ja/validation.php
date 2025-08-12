@@ -33,7 +33,7 @@ return [
     ],
     'boolean' => 'The :attribute field must be true or false.',
     'can' => 'The :attribute field contains an unauthorized value.',
-    'confirmed' => 'The :attribute field confirmation does not match.',
+    'confirmed' => ':attributeが かくにんで 入力(にゅうりょく)したものと ちがっているよ。',
     'current_password' => 'The password is incorrect.',
     'date' => 'The :attribute field must be a valid date.',
     'date_equals' => 'The :attribute field must be a date equal to :date.',
@@ -48,7 +48,7 @@ return [
     'distinct' => 'The :attribute field has a duplicate value.',
     'doesnt_end_with' => 'The :attribute field must not end with one of the following: :values.',
     'doesnt_start_with' => 'The :attribute field must not start with one of the following: :values.',
-    'email' => 'The :attribute field must be a valid email address.',
+    'email' => ':attributeは 「〇〇@△△.com」みたいに 入力(にゅうりょく)してね。',
     'ends_with' => 'The :attribute field must end with one of the following: :values.',
     'enum' => 'The selected :attribute is invalid.',
     'exists' => 'The selected :attribute is invalid.',
@@ -71,7 +71,7 @@ return [
     'image' => 'The :attribute field must be an image.',
     'in' => 'The selected :attribute is invalid.',
     'in_array' => 'The :attribute field must exist in :other.',
-    'integer' => 'The :attribute field must be an integer.',
+    'integer' => ':attributeは すうじで 入力(にゅうりょく)してね。',
     'ip' => 'The :attribute field must be a valid IP address.',
     'ipv4' => 'The :attribute field must be a valid IPv4 address.',
     'ipv6' => 'The :attribute field must be a valid IPv6 address.',
@@ -94,7 +94,7 @@ return [
         'array' => 'The :attribute field must not have more than :max items.',
         'file' => 'The :attribute field must not be greater than :max kilobytes.',
         'numeric' => 'The :attribute field must not be greater than :max.',
-        'string' => 'The :attribute field must not be greater than :max characters.',
+        'string' => ':attributeは 100文字(もじ)いないで 入力(にゅうりょく)してね。',
     ],
     'max_digits' => 'The :attribute field must not have more than :max digits.',
     'mimes' => 'The :attribute field must be a file of type: :values.',
@@ -132,7 +132,7 @@ return [
     'prohibited_unless' => 'The :attribute field is prohibited unless :other is in :values.',
     'prohibits' => 'The :attribute field prohibits :other from being present.',
     'regex' => 'The :attribute field format is invalid.',
-    'required' => 'The :attribute field is required.',
+    'required' => ':attributeは かならず 入力(にゅうりょく)してね。',
     'required_array_keys' => 'The :attribute field must contain entries for: :values.',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_if_accepted' => 'The :attribute field is required when :other is accepted.',
@@ -170,6 +170,9 @@ return [
     */
 
     'custom' => [
+        'name.max' => '【おなまえ】は 30文字(もじ)いないで 入力(にゅうりょく)してね。',
+        'nickname.max' => '【ニックネーム】は 30文字(もじ)いないで 入力(にゅうりょく)してね。',
+        'password.max' => '【ニックネーム】は 100文字(もじ)いないで 入力(にゅうりょく)してね。',
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
@@ -186,6 +189,15 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'date' => '【いつ？】',
+        'amount' => '【何円(なんえん)？】',
+        'comment' => '【メモ】',
+        'message' => 'メッセージ',
+        'name' => '【おなまえ】',
+        'nickname' => '【ニックネーム】',
+        'mailaddress' => '【メールアドレス】',
+        'password' => '【パスワード】'
+    ],
 
 ];

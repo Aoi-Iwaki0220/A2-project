@@ -41,7 +41,7 @@
                 @if ($child)
                     <img src="{{ $child->image ? asset($child->image) : asset('character1.png') }}" alt="アイコン" style="width:20%; height:20%; border-radius:50%;">
                     <p>ニックネーム: {{ $child->nickname }}</p>
-                    <p>お小遣い合計: {{ $child->nickname }}</p>
+                    <p>お小遣い合計: {{$nowAmount }}円</p>
                     <form action="{{route('unlink.child')}}" method="POST" onsubmit="return confirm('紐づけを解除しますか？');">
                         @csrf
                         <button type="submit">紐づけを解除する</button>
@@ -51,6 +51,7 @@
                 @endif
             </div>
         </nav>
+    
 
 @endsection
 

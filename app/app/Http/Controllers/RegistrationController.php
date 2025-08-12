@@ -9,6 +9,10 @@ use App\Models\Spending;
 use App\Models\Income;
 use App\Models\Type;
 use App\Models\Child;
+use App\Models\Notification;
+use App\Http\Requests\CreateData;
+use App\Http\Requests\CreateGoalRequest;
+use App\Http\Requests\CreateMypageRequest;
 
 
 class RegistrationController extends Controller
@@ -17,7 +21,7 @@ class RegistrationController extends Controller
         return view('goal');
     }
 
-    public function createGoal(Request $request) {  //目標追加
+    public function createGoal(CreateGoalRequest $request) {  //目標追加
         $goal = new Goal;
 
         $goal->date = $request->date;
@@ -25,7 +29,7 @@ class RegistrationController extends Controller
         $goal->user_id = auth('child')->id();
         $goal->save();
 
-        return redirect('/');
+        return redirect('home');
     }
 
     public function editGoalForm(int $id) {
@@ -38,14 +42,14 @@ class RegistrationController extends Controller
         ]);
     }
 
-    public function editGoal(int $id, Request $request) {  //目標編集
+    public function editGoal(int $id, CreateGoalRequest $request) {  //目標編集
         $G_record = Goal::find($id);
 
         $G_record->date = $request->date;
         $G_record->amount = $request->amount;
 
         $G_record->save();
-        return redirect('/');
+        return redirect('home');
     }
 
     public function deleteGoal(int $id, Request $request) {  //目標論理削除
@@ -54,7 +58,7 @@ class RegistrationController extends Controller
         if($goal) {
             $goal->delete();
         }
-        return redirect('/');
+        return redirect('home');
     }
 //-------------------↑↑ここまで目標↑↑------------------------------
 
@@ -67,8 +71,10 @@ class RegistrationController extends Controller
             
     }
 
-    public function createSpend(Request $request) {  //支出追加
+    public function createSpend(CreateData $request) {  //支出追加
         $spending = new Spending;
+        $childId = auth('child')->id();
+         Log::info("createSpend: childId = " . $childId);
 
         $spending->date = $request->date;
         $spending->amount = $request->amount;
@@ -77,6 +83,7 @@ class RegistrationController extends Controller
         $spending->user_id = auth('child')->id();
         $spending->save();
 
+    
         return redirect('child_mypage');
     }
 
@@ -103,7 +110,7 @@ class RegistrationController extends Controller
         ]);
     }
 
-    public function editSpend(int $id, Request $request) {  //支出編集
+    public function editSpend(int $id, CreateData $request) {  //支出編集
         $spending = new Spending;
         $spend_record = $spending->find($id);
 
@@ -129,8 +136,9 @@ class RegistrationController extends Controller
             
     }
     
-    public function createIncome(Request $request) {  //収入追加
+    public function createIncome(CreateData $request) {  //収入追加
         $income = new Income;
+        $childId = auth('child')->id();
 
         $income->date = $request->date;
         $income->amount = $request->amount;
@@ -139,6 +147,7 @@ class RegistrationController extends Controller
         $income->user_id =  auth('child')->id();
         $income->save();
 
+       
         return redirect('child_mypage');
     }
 
@@ -166,7 +175,7 @@ class RegistrationController extends Controller
         ]);
     }
 
-    public function editIncome(int $id, Request $request) {  //収入編集
+    public function editIncome(int $id, CreateData $request) {  //収入編集
         $income = new Income;
         $income_record = $income->find($id);
 
@@ -193,7 +202,7 @@ class RegistrationController extends Controller
         ]);
     }
 
-    public function editChild(Request $request) {  //こども編集
+    public function editChild(CreateMypageRequest $request) {  //こども編集
         $child = auth('child')->user();
         $child->name = $request->name;
         $child->nickname = $request->nickname;
@@ -214,7 +223,7 @@ class RegistrationController extends Controller
             ]);
     }
 
-    public function editParent(Request $request) {  //保護者編集
+    public function editParent(CreateMypageRequest $request) {  //保護者編集
         $parent = auth('parent')->user();
         $parent->name = $request->name;
         $parent->nickname = $request->nickname;

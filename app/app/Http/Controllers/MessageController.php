@@ -8,6 +8,8 @@ use App\Models\Child;
 use App\Models\UserParent;
 use App\Models\Message;
 use App\Models\MessageRead;
+use App\Http\Requests\CreateMessageRequest;
+
 
 class MessageController extends Controller
 {
@@ -24,7 +26,7 @@ class MessageController extends Controller
 
         return view('message', compact('child', 'messages'));
     }
-    public function sendMessage(Request $request) {  //メッセージ送信
+    public function sendMessage(CreateMessageRequest $request) {  //メッセージ送信
         $parent = auth('parent')->user(); // 保護者ログイン中
 
         $message = new Message();

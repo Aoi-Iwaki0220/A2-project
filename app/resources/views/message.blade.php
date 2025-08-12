@@ -2,6 +2,16 @@
 @section('content')
     <main>
         <h4>メッセージを送る</h4>
+            <div class="card">
+                @if($errors->any())  
+                    <div class="alert alert-danger">
+                        @foreach($errors->all() as $message)
+                            <li>{{ $message}}</li>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
         <nav class="card mt-5">
             <form action="{{route('send.message')}}" method="post">
                 @csrf
@@ -10,26 +20,32 @@
                         <p>{{ $child->name }}</p>
                         <input type="hidden" class='form-control' name="to_user_id" value="{{ $child->id }}" />
                     <label for='message' class='mt-2'>メッセージ</label>
-                        <textarea class='form-control' name='message' required></textarea>
+                        <textarea class='form-control' name='message'></textarea>
                 @else
                     <p>送る相手がいません</p>
                 @endif
 
                 <button type="submit">送る</button>
             </form>
+            <div></div>
         </nav>
             <p>これまでに送ったメッセージ</p>
-                @foreach ($messages as $message)
-                    <p>〇日付：{{ $message->created_at->format('Y-m-d H:i') }}:<{{ $message->message }}</p>
-                    @php
-                       $childId = $child->id ?? null; // 念のため nullチェック
-                        $read = $message->getReadInfoByUser($childId);
-                    @endphp
-                    @if ($message->isReadByUser($childId))
-                        <span style="color: green;">既読</span>
-                    @else
-                        <span style="color: red;">未読</span>
-                    @endif
-                @endforeach
+                <div>
+                
+                    @foreach ($messages as $message)
+                        <p>〇日付：{{ $message->created_at->format('Y-m-d H:i') }}:<{{ $message->message }}</p>
+                        @php
+                        $childId = $child->id ?? null; // 念のため nullチェック
+                            $read = $message->getReadInfoByUser($childId);
+                        @endphp
+                        @if ($message->isReadByUser($childId))
+                            <span style="color: green;">既読</span>
+                        @else
+                            <span style="color: red;">未読</span>
+                        @endif
+                    @endforeach
+                </div>
+            
     </main>
 @endsection
+

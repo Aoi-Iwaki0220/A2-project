@@ -22,7 +22,17 @@
     color: inherit !important;
   }
 </style>
-
+    @if (session('user_type') === 'child')
+        @if (!empty($unread) && $unread > 0)
+            <div class="alert alert-warning text-center mt-3">
+                <a href="{{ route('message.list') }}" class="text-dark fw-bold" style="text-decoration: none;">
+                    メッセージがとどいているよ！
+                </a>
+            </div>
+        @else
+            <p>よんでいないメッセージはないよ</p>
+        @endif
+    @endif
     <div id="calendar" style="max-width: 55%; "></div>
     <h4>あかは「つかったお金」/あおは「もらったおかね」</h4>
 
@@ -37,6 +47,16 @@
                                         {{ \Carbon\Carbon::parse($goal->date)->format('Y年 n月 j 日') }}までに
                                         <br>{{ $goal->amount }} 円ためる！
                                     </p>
+                                    @if ($goal)
+                                        @if ($remaining === 0)
+                                            <p style="color: green; font-weight: bold; font-size: 20px;">
+                                                🎉 もくひょうたっせい！おめでとう！ 🎉
+                                            </p>
+                                        @else
+                                            <p>いまは {{ $nowAmount }} 円たまっているよ！</p>
+                                            <p>もくひょうまで あと {{ $remaining }} 円だよ！</p>
+                                        @endif
+                                    @endif
                                 </ul>
                                 @if (session('user_type') === 'child')
                                     <button type="button" onclick="location.href='{{ route('edit.goal', ['id' => $goal->id])}}'">

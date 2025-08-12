@@ -10,7 +10,15 @@
             </button>
             </div>
 
-
+            <div class="card">
+                @if($errors->any())  
+                    <div class="alert alert-danger">
+                        @foreach($errors->all() as $message)
+                            <li>{{ $message}}</li>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
             <!-- アイコンのパスを送信 -->
             <input type="hidden" id="icon-input" name="image" value="{{ old('image', $user->image) }}">
         

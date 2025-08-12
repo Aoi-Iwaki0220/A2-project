@@ -2,13 +2,21 @@
 @section('content')
     <main>
         <h4>へんしゅうする</h4>
-
+            <div class="card">
+                @if($errors->any())  
+                    <div class="alert alert-danger">
+                        @foreach($errors->all() as $message)
+                            <li>{{ $message}}</li>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
         @if (isset($income_result))
         <form action="{{ route('edit.income', ['id' => $income_result->id ]) }}" method="post">
             @csrf
             <label for="date">いつ？</label>
                 <input type='date' class='form-control' name='date' value="{{ old('date', $income_result->date) }}"/>
-            <label for="amount">いくらもらった？</label>
+            <label for="amount">何円(なんえん)？</label>
                 <input type='text' class='form-control' name='amount' value="{{ old('amount', $income_result->amount) }}"/>
             <label for="type">もらった りゆうは？</label>
                 <select name='type_id' class='form-control'>
@@ -28,7 +36,7 @@
             @csrf
             <label for="date">いつ？</label>
                 <input type='date' class='form-control' name='date' value="{{ old('date', $spend_result->date) }}"/>
-            <label for="amount">いくらつかった？</label>
+            <label for="amount">何円(なんえん)？</label>
                 <input type='text' class='form-control' name='amount' value="{{ old('amount', $spend_result->amount) }}"/>
             <label for="type">なにをかった？</label>
                 <select name='type_id' class='form-control'>

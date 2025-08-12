@@ -7,21 +7,39 @@ use App\Models\Income;
 use App\Models\Type;
 use App\Models\Child;
 use App\Models\UserParent;
+use App\Models\Message;
+use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DisplayController extends Controller
 {
-    public function index() {//目標表示
+    public function index() {
         $childId = auth('child')->id();
         $today = Carbon::today();
-        $goal = Goal::where('user_id', $childId)->whereDate('date', '>=', $today)->first();
-        $events = $this->getEventsColorOnly($childId); 
+        $goal = Goal::where('user_id', $childId)->whereDate('date', '>=', $today)->first();//目標表示
+        $events = $this->getEventsColorOnly(); 
+
+        $unread = Message::whereNotIn('id', function ($query) use ($childId) {
+            $query->select('message_id')
+                ->from('message_reads')//未読メッセージカウント
+                ->where('user_id', $childId);
+        })
+                ->where('to_user_id', $childId)
+                ->count(); 
+
+        $incomeSum = Income::where('user_id', $childId)->sum('amount');//収入合計
+        $spendingSum = Spending::where('user_id', $childId)->sum('amount');//支出合計
+        $nowAmount = $incomeSum - $spendingSum;//差額
+        $remaining = $goal ? max($goal->amount - $nowAmount, 0) : 0;
 
         return view('home', [
             'goal' => $goal,
-            'events' => $events
+            'events' => $events,
+            'unread' => $unread,
+            'nowAmount' => $nowAmount,
+            'remaining' => $remaining
         ]);
     }
 
@@ -124,12 +142,6 @@ class DisplayController extends Controller
         return view('calendar', compact('events'));
     }
 
-    public function homeIndex()  //home.php
-    {
-        $events = $this->getEventsColorOnly();
-        return view('home', compact('events'));
-    }
-
     public function detailCalendar($date) {
         $childId = auth('child')->id();
         $spending = Spending::where('user_id', $childId)
@@ -220,13 +232,21 @@ class DisplayController extends Controller
     public function parentMypage() {
         $parent = auth('parent')->user();
         $child = $parent->child;
-        
-        return view('parent_mypage', compact('parent', 'child'));
+
+        if ($child) {
+            $childId = $child->id;
+            $incomeSum = Income::where('user_id', $childId)->sum('amount');//収入合計
+            $spendingSum = Spending::where('user_id', $childId)->sum('amount');//支出合計
+            $nowAmount = $incomeSum - $spendingSum;//差額
+        }
+    
+        return view('parent_mypage', compact('parent', 'child', 'nowAmount'));
     }
 
     public function unlinkChild(){  //子供との紐づけ解除
         $parent = auth('parent')->user();
         $child = $parent->child; 
+
 
         if ($child) {
             $child->parent_id = null;

@@ -35,8 +35,7 @@ Route::get('/password/reset/form', function() {
 
 Route::group(['middleware' => ['parentOrChild']], function () {  //保護者とこども共通
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    Route::get('/home', [DisplayController::class, 'homeindex']);
-    Route::get('/', [DisplayController::class, 'index'])->name('home');
+    Route::get('/home', [DisplayController::class, 'index'])->name('home');
     Route::get('/detail_calendar/{date}', [DisplayController::class, 'detailCalendar'])->name('detail.calendar');
     Route::get('/calendar', [DisplayController::class, 'calendarIndex'])->name('calendar.index');
     Route::get('/graph/{year}/{month}', [DisplayController::class, 'graph'])->name('graph');
