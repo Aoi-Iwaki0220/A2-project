@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Admin\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -77,4 +78,10 @@ Route::group(['middleware' => ['auth:parent', 'parent']], function () {
     Route::post('/unlink_child', [DisplayController::class, 'unlinkChild'])->name('unlink.child');
     Route::get('send_message', [MessageController::class, 'sendMessageForm'])->name('send.message');
     Route::post('send_message', [MessageController::class, 'sendMessage']);
+});
+
+Route::group(['middleware' => ['auth:admin', 'admin']], function () {
+    Route::get('/management', [AdminController::class, 'index'])->name('management');
+    Route::get('/search_user', [AdminController::class, 'searchUser'])->name('search.user');
+     Route::get('/search_userhistory', [AdminController::class, 'searchUserHistory'])->name('search.userhistory');
 });

@@ -32,6 +32,7 @@
                     <select name="user_type" required>
                         <option value="child">こども</option>
                         <option value="parent">保護者（ほごしゃ）</option>
+                        <option value="admin">管理者</option>
 
                     </select>
                 </div>

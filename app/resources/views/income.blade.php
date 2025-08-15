@@ -25,7 +25,7 @@
                     @endforeach
                 </select>
             <label for='comment' class='mt-2'>メモ</label>
-                <textarea class='form-control' name='comment' >{{old('comment')}}"</textarea>
+                <textarea class='form-control' name='comment' >{{old('comment')}}</textarea>
 
             <button type="submit">とうろくする</button>
         </form>

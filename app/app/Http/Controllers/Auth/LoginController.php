@@ -26,14 +26,27 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo(){
+        $userType = session('user_type');
+
+        switch ($userType) {
+            case 'admin':
+                return '/management';
+            case 'parent':
+                return '/home';
+            case 'child':
+                return '/home';
+            default:
+                return '/home';
+        }
+    }
 
      protected function validateLogin(Request $request)
     {
         $request->validate([
             'mailaddress' => ['required', 'email', 'max:50'],
             'password' => ['required', 'string'],
-            'user_type' => ['required', 'in:parent,child'],
+            'user_type' => ['required', 'in:parent,child,admin'],
         ]);
     }
 
@@ -42,7 +55,7 @@ class LoginController extends Controller
         $login = $request->only('mailaddress', 'password');//$requestからメアドとパスワードのみ取り出す
         $guard = $request->input('user_type');//user_type取得
 
-        if (!in_array($guard, ['parent', 'child'])) {//user_typeが'parent'か'child'でなければfalseをかえす
+        if (!in_array($guard, ['parent', 'child','admin'])) {//user_typeが'parent'か'child'でなければfalseをかえす
             return false;
         }
 
@@ -51,17 +64,16 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-    // user_typeをセッションに記録（parent or child）
-        session(['user_type' => $request->input('user_type')]);
-
-        return redirect('/home');
+    // ログイン時のuser_typeをセッションに保存
+    $userType = $request->input('user_type');
+    session(['user_type' => $userType]);
     }
 
     public function logout(Request $request)
     {
         $guard = session('user_type');
 
-        if ($guard && in_array($guard, ['parent', 'child'])) {
+        if ($guard && in_array($guard, ['parent', 'child', 'admin'])) {
             Auth::guard($guard)->logout();
         }
         $request->session()->forget('user_type');
@@ -74,11 +86,8 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('auth:parent,child')->only('logout');
+        $this->middleware('auth:parent,child,admin')->only('logout');
     }
 
-    protected function redirectTo() {
-        return '/home';
-    }
 
 }

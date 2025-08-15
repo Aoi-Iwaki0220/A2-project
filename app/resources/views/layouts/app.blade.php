@@ -32,10 +32,16 @@
                 <li class="nav-item d-flex align-items-center gap-3">
                         @php
                             $user = null;
+                            $userType = null;
                             if (Auth::guard('parent')->check()) {
                                 $user = Auth::guard('parent')->user();
-                            } elseif (Auth::guard('child')->check()) {
+                                $userType = 'parent';
+                            }elseif (Auth::guard('child')->check()) {
                                 $user = Auth::guard('child')->user();
+                                $userType = 'child';
+                            }elseif (Auth::guard('admin')->check()) {
+                                $user = Auth::guard('admin')->user();
+                                $userType = 'admin';
                             }
                         @endphp
                     <div class="px-2 py-1">
@@ -44,16 +50,20 @@
                                 <a href="{{ route('parent.mypage') }}" class="d-flex align-items-center text-decoration-none text-dark">
                             @elseif (Auth::guard('child')->check())
                                 <a href="{{ route('child.mypage') }}" class="d-flex align-items-center text-decoration-none text-dark">
+                            @elseif (Auth::guard('admin')->check())
+                                <a href="{{ route('management') }}" class="d-flex align-items-center text-decoration-none text-dark">
                             @else
                                 <a href="#">
                             @endif
                             
-                            @if (!empty($user->image))
-                                <img src="{{ asset($user->image) }}" alt="アイコン" style="width:45px; height:45px; border-radius:50%;">
-                            @else
-                                <img src="{{ asset('character1.png') }}" style="width:45px; height:45px; border-radius:50%;">
+                            @if ($userType !== 'admin')
+                                @if (!empty($user->image))
+                                    <img src="{{ asset($user->image) }}" alt="アイコン" style="width:45px; height:45px; border-radius:50%;">
+                                @else
+                                    <img src="{{ asset('character1.png') }}" style="width:45px; height:45px; border-radius:50%;">
+                                @endif
+                                <span style="margin-left: 12px; font-weight: bold;">{{ $user->nickname }}</span>
                             @endif
-                            <span style="margin-left: 12px; font-weight: bold;">{{ $user->nickname }}</span>
                         </a>
                     </div>
                     <a class="nav-link" href="{{ route('logout') }}"

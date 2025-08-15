@@ -74,7 +74,6 @@ class RegistrationController extends Controller
     public function createSpend(CreateData $request) {  //支出追加
         $spending = new Spending;
         $childId = auth('child')->id();
-         Log::info("createSpend: childId = " . $childId);
 
         $spending->date = $request->date;
         $spending->amount = $request->amount;

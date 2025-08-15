@@ -24,6 +24,10 @@
                 <span>{{ $parent->profile ?? '未登録'}}</span>
         </div>
     </div>
+    @php
+    $isAdmin = auth()->guard('admin')->check();
+    @endphp
+        @if(!$isAdmin)
         <button type="button" onclick="location.href='{{ route('edit.parent')}}'">
             編集する
         </button>
@@ -35,6 +39,7 @@
                 招待コード入力
             </button>
         </div>
+        @endif
         <nav class="card mt-4">
             <div class="card-body">
                 <h3>こどもの情報</h3>
@@ -42,10 +47,12 @@
                     <img src="{{ $child->image ? asset($child->image) : asset('character1.png') }}" alt="アイコン" style="width:20%; height:20%; border-radius:50%;">
                     <p>ニックネーム: {{ $child->nickname }}</p>
                     <p>お小遣い合計: {{$nowAmount }}円</p>
+                    @if(!$isAdmin)
                     <form action="{{route('unlink.child')}}" method="POST" onsubmit="return confirm('紐づけを解除しますか？');">
                         @csrf
                         <button type="submit">紐づけを解除する</button>
                     </form>
+                    @endif
                 @else
                     <p>紐づいた子どもはいません</p>
                 @endif
