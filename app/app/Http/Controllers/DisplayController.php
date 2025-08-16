@@ -16,18 +16,34 @@ use Illuminate\Support\Facades\Auth;
 class DisplayController extends Controller
 {
     public function index() {
-        $childId = auth('child')->id();
+         $userType = session('user_type');
+
+        if ($userType === 'child') {
+            $child = auth('child')->user();
+        } elseif ($userType === 'parent') {
+            $child = auth('parent')->user()->child;
+                if (!$child) {
+                    $parent = auth('parent')->user();
+                    $child = null;
+                    $nowAmount = 0;
+                    return view('parent_mypage', compact('parent', 'child', 'nowAmount'));
+                }
+        }
+        $childId = $child->id;
         $today = Carbon::today();
         $goal = Goal::where('user_id', $childId)->whereDate('date', '>=', $today)->first();//目標表示
-        $events = $this->getEventsColorOnly(); 
+        $events = $this->getEventsColorOnly($childId); 
 
-        $unread = Message::whereNotIn('id', function ($query) use ($childId) {
-            $query->select('message_id')
-                ->from('message_reads')//未読メッセージカウント
-                ->where('user_id', $childId);
-        })
-                ->where('to_user_id', $childId)
-                ->count(); 
+        $unread = 0;
+        if ($userType === 'child') {
+            $unread = Message::whereNotIn('id', function ($query) use ($childId) {
+                $query->select('message_id')
+                    ->from('message_reads')//未読メッセージカウント
+                    ->where('user_id', $childId);
+            })
+                    ->where('to_user_id', $childId)
+                    ->count(); 
+        }
 
         $incomeSum = Income::where('user_id', $childId)->sum('amount');//収入合計
         $spendingSum = Spending::where('user_id', $childId)->sum('amount');//支出合計
@@ -43,7 +59,7 @@ class DisplayController extends Controller
         ]);
     }
 
-    public function Sindex() {
+    public function spendingIndex() {
         $childId = auth('child')->id();
         $spending = new Spending;
         $spends = Spending::where('user_id', $childId)->with('type')->get();
@@ -54,9 +70,9 @@ class DisplayController extends Controller
         ]);
     }
 
-    public function Iindex() {
+    public function incomeIndex() {
         $childId = auth('child')->id();
-        $income = new Spending;
+        $income = new Income;
         $incomes = Income::where('user_id', $childId)->with('type')->get();
 
 
@@ -66,9 +82,8 @@ class DisplayController extends Controller
     }
 
 
-    public function getEventsWithAmount()  //金額も表示→calendar.php
+    public function getEventsWithAmount($childId)  //金額も表示→calendar.php
     {
-        $childId = auth('child')->id();
         $events = [];
 
         $spendings = Spending::where('user_id', $childId)
@@ -101,9 +116,8 @@ class DisplayController extends Controller
             return $events;
         }
 
-    public function getEventsColorOnly()  //色のみ表示見見→home.php
+    public function getEventsColorOnly($childId)  //色のみ表示見見→home.php
     {
-        $childId = auth('child')->id();
         $events = [];
 
         $spendings = Spending::where('user_id', $childId)
@@ -117,7 +131,7 @@ class DisplayController extends Controller
 
         foreach ($spendings as $spend) {
             $events[] = [
-                'id' => 'spend_'.$spend->id,
+                'id' => 'spend_'. uniqid(), 
                 'title' => '' ,
                 'start' => $spend->date,
                 'color' => 'red',
@@ -136,14 +150,32 @@ class DisplayController extends Controller
             return $events;
         }
 
-    public function calendarIndex()  //calendar.php
-    {
-        $events = $this->getEventsWithAmount();
+    public function calendarIndex()  { //calendar.php
+        $userType = session('user_type');
+
+        if ($userType === 'child') {
+            $childId = auth('child')->id();
+        } elseif ($userType === 'parent') {
+            $childId = auth('parent')->user()->child->id;
+        } else {
+            abort(403, 'アクセス権がありません');
+        }
+
+        $events = $this->getEventsWithAmount($childId);
         return view('calendar', compact('events'));
     }
 
     public function detailCalendar($date) {
-        $childId = auth('child')->id();
+        $userType = session('user_type');
+
+        if ($userType === 'child') {
+            $childId = auth('child')->id();
+        } elseif ($userType === 'parent') {
+            $childId = auth('parent')->user()->child->id;
+        } else {
+            abort(403, 'アクセス権がありません');
+        }
+
         $spending = Spending::where('user_id', $childId)
                     ->whereDate('date', $date)
                     ->with('type')
@@ -164,7 +196,16 @@ class DisplayController extends Controller
     //-------------------↑↑ここまでカレンダー↑↑------------------------------
 
     public function graph($year, $month) {  //グラフ表示
-        $childId = auth('child')->id();
+        $userType = session('user_type');
+
+        if ($userType === 'child') {
+            $childId = auth('child')->id();
+        } elseif ($userType === 'parent') {
+            $childId = auth('parent')->user()->child->id;
+        } else {
+            abort(403, 'アクセス権がありません');
+        }
+
         $spendData = Spending::where('user_id', $childId)
                         ->whereYear('date', $year)
                         ->whereMonth('date', $month)
@@ -193,7 +234,16 @@ class DisplayController extends Controller
     }
 
     public function previewGraph($year, $month) {  //グラフPDF
+        $userType = session('user_type');
+
+        if ($userType === 'child') {
             $childId = auth('child')->id();
+        } elseif ($userType === 'parent') {
+            $childId = auth('parent')->user()->child->id;
+        } else {
+            abort(403, 'アクセス権がありません');
+        }
+
             $spendData = Spending::where('user_id', $childId)
                         ->whereYear('date', $year)
                         ->whereMonth('date', $month)
@@ -233,6 +283,7 @@ class DisplayController extends Controller
         $parent = auth('parent')->user();
         $child = $parent->child;
 
+        $nowAmount = 0;
         if ($child) {
             $childId = $child->id;
             $incomeSum = Income::where('user_id', $childId)->sum('amount');//収入合計

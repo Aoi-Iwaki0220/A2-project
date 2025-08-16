@@ -43,7 +43,7 @@
         <nav class="card mt-4">
             <div class="card-body">
                 <h3>こどもの情報</h3>
-                @if ($child)
+                @if (isset($child) && $child)
                     <img src="{{ $child->image ? asset($child->image) : asset('character1.png') }}" alt="アイコン" style="width:20%; height:20%; border-radius:50%;">
                     <p>ニックネーム: {{ $child->nickname }}</p>
                     <p>お小遣い合計: {{$nowAmount }}円</p>
